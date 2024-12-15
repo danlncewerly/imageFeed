@@ -4,10 +4,12 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
+    // MARK: - Private Properties
     private var task: URLSessionTask?
     private(set) var avatarURL: String?
     private init() {}
     
+    // MARK: - fetchProfileImageUrl func
     func fetchProfileImageUrl(token: String, handler: @escaping (Result<UserResult, any Error>) -> Void) {
         
         guard let userDataRequest = makeUserDataRequest(token: token),
@@ -18,7 +20,7 @@ final class ProfileImageService {
         }
         
         let task = URLSession.shared.objectTask(for: userDataRequest) { [weak self] (result: Result<UserResult, Error>) in
-            guard let self else { preconditionFailure("") }
+            guard let self else { return }
             self.task = nil
             switch result {
             case .success(let data):
@@ -44,6 +46,7 @@ final class ProfileImageService {
     }
 }
 
+// MARK: - makeUserDataRequest private func
 private func makeUserDataRequest(token: String) -> URLRequest? {
     let profileService = ProfileService.shared
     guard let profile = profileService.profile else {
@@ -70,7 +73,7 @@ private func makeUserDataRequest(token: String) -> URLRequest? {
     return request
 }
 
-
+// MARK: - Models
 struct UserResult: Codable {
     let profileImage: Dictionary<String, String>
 }
