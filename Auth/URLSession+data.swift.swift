@@ -1,8 +1,11 @@
 import Foundation
 
 extension URLSession {
+    
+    // MARK: - Static Properties
     static let decoder: JSONDecoder = .init()
-
+    
+    // MARK: - objectTask func
     func objectTask<T: Codable>(for request: URLRequest, completion: @escaping(Result<T,Error>) -> Void) -> URLSessionTask {
         let decoder = URLSession.decoder
         decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -11,19 +14,22 @@ extension URLSession {
             case .success(let data):
                 do {
                     let response = try decoder.decode(T.self, from: data)
+                    print("Success \(T.self) responce")
                     completion(.success(response))
+                    UIBlockingProgressHUD.dismiss()
                 } catch {
                     print("Ошибка декодирования: \(error.localizedDescription), Данные: \(String(data: data, encoding: .utf8) ?? "")")
                     completion(.failure(error))
                 }
             case .failure(let error):
-                print("Load avatar URL failure")
+                print("objectTask failure")
                 completion(.failure(error))
             }
         }
         return task
     }
     
+    // MARK: - data func
     func data(for request: URLRequest, completion: @escaping (Result<Data, Error>) -> Void) -> URLSessionTask {
         let fulfillCompletionOnTheMainThread: (Result<Data, Error>) -> Void = { result in
             DispatchQueue.main.async {
@@ -53,6 +59,7 @@ extension URLSession {
     }
 }
 
+// MARK: - enum NetworkError
 enum NetworkError: Error {
     case httpStatusCode(Int)
     case urlRequestError(Error)
