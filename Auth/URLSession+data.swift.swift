@@ -16,7 +16,6 @@ extension URLSession {
                     let response = try decoder.decode(T.self, from: data)
                     print("Success \(T.self) responce")
                     completion(.success(response))
-                    UIBlockingProgressHUD.dismiss()
                 } catch {
                     print("Ошибка декодирования: \(error.localizedDescription), Данные: \(String(data: data, encoding: .utf8) ?? "")")
                     completion(.failure(error))

@@ -14,7 +14,7 @@ final class ProfileViewController: UIViewController {
     private lazy var profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "Rectangle 169")
-        imageView.frame.size.width = 70
+        imageView.frame.size.width = 70 //        Если ее убрать, то ава квадратная из за строчки ниже
         imageView.layer.cornerRadius = imageView.frame.size.width / 2
         imageView.clipsToBounds = true
         return imageView

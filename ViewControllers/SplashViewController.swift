@@ -1,9 +1,6 @@
 import UIKit
 
 final class SplashViewController: UIViewController {
-    // MARK: - Static Properties
-    static let shared = SplashViewController()
-    
     // MARK: - Private Properties
     private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     private let profileImageService = ProfileImageService.shared
@@ -49,20 +46,20 @@ final class SplashViewController: UIViewController {
         ])
     }
     
+    // Переход к экрану авторизации
     func switchToAuthViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard
             let navigationViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? UINavigationController,
             let authViewController = navigationViewController.topViewController as? AuthViewController
-        else {return}
+        else { return }
         
         authViewController.delegate = self
         navigationViewController.modalPresentationStyle = .fullScreen
-        present(navigationViewController, animated: true) {
-            
-        }
+        present(navigationViewController, animated: true)
     }
     
+    // Переход к экрану TabBarController
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
             assertionFailure("Invalid window configuration")
@@ -80,7 +77,7 @@ extension SplashViewController: AuthViewControllerDelegate {
         vc.dismiss(animated: true)
         
         guard let token = oAuth2TokenStorage.token else {
-            print("token not available ")
+            print("Token not available")
             return
         }
         fetchProfile(token)
@@ -110,3 +107,4 @@ extension SplashViewController: AuthViewControllerDelegate {
         }
     }
 }
+
